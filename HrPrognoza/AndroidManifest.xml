@@ -8,8 +8,12 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="17" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
-        android:allowBackup="true"
+        android:allowBackup="true" 
+        android:name="HrPrognozaApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
@@ -24,9 +28,9 @@
         </activity>
 
         <provider
-            android:exported="false"
             android:name=".provider.CityProvider"
-            android:authorities="com.tnovoselec.hrprognoza.provider" >
+            android:authorities="com.tnovoselec.hrprognoza.provider"
+            android:exported="false" >
         </provider>
     </application>
 

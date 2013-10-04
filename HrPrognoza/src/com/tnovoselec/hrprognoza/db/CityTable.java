@@ -13,6 +13,8 @@ public class CityTable {
 	public static final String COLUMN_LAT = "lat";
 	public static final String COLUMN_LNG = "lng";
 	public static final String COLUMN_COUNTRY = "country";
+	public static final String COLUMN_HOURLY_FORECAST = "hourly_forecast";
+	public static final String COLUMN_DAILY_FORECAST = "daily_forecast";
 
 	  // Database creation SQL statement
 	  private static final String DATABASE_CREATE = "create table " 
@@ -22,7 +24,9 @@ public class CityTable {
 	      + COLUMN_NAME + " text not null, " 
 	      + COLUMN_COUNTRY + " text not null," 
 	      + COLUMN_LAT + " real not null,"
-	      + COLUMN_LNG + " real not null"
+	      + COLUMN_LNG + " real not null,"
+	      + COLUMN_HOURLY_FORECAST+ " text ,"
+	      + COLUMN_DAILY_FORECAST + " text"
 	      + ");";
 
 	  public static void onCreate(SQLiteDatabase database) {
