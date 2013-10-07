@@ -29,7 +29,17 @@
 
         <provider
             android:name=".provider.CityProvider"
-            android:authorities="com.tnovoselec.hrprognoza.provider"
+            android:authorities="com.tnovoselec.hrprognoza.cityprovider"
+            android:exported="false" >
+        </provider>
+        <provider
+            android:name=".provider.HourlyForecastProvider"
+            android:authorities="com.tnovoselec.hrprognoza.hourlyforecastprovider"
+            android:exported="false" >
+        </provider>
+         <provider
+            android:name=".provider.DailyForecastProvider"
+            android:authorities="com.tnovoselec.hrprognoza.dailyforecastprovider"
             android:exported="false" >
         </provider>
     </application>

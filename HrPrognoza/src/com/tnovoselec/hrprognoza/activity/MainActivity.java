@@ -16,12 +16,15 @@ import com.tnovoselec.hrprognoza.R;
 import com.tnovoselec.hrprognoza.async.DbInitializerTask;
 import com.tnovoselec.hrprognoza.async.DbInitializerTask.DbInitializerListener;
 import com.tnovoselec.hrprognoza.data.DataManager;
-import com.tnovoselec.hrprognoza.db.CityDatabaseHelper;
+import com.tnovoselec.hrprognoza.db.DatabaseHelper;
 import com.tnovoselec.hrprognoza.db.CityTable;
+import com.tnovoselec.hrprognoza.db.HourlyForecastTable;
 import com.tnovoselec.hrprognoza.listeners.HourlyForecastListener;
 import com.tnovoselec.hrprognoza.model.City;
 import com.tnovoselec.hrprognoza.model.HourlyForecast;
+import com.tnovoselec.hrprognoza.model.HourlyForecast.Forecast;
 import com.tnovoselec.hrprognoza.provider.CityProvider;
+import com.tnovoselec.hrprognoza.provider.HourlyForecastProvider;
 import com.tnovoselec.hrprognoza.utils.Util;
 
 public class MainActivity extends Activity implements DbInitializerListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -34,7 +37,7 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		if (!Util.isCityDbInitialized(this)) {
-			new DbInitializerTask(this, this, new CityDatabaseHelper(this).getWritableDatabase()).execute(new Void[0]);
+			new DbInitializerTask(this, this, new DatabaseHelper(this).getWritableDatabase()).execute(new Void[0]);
 		} else {
 			onCompleted();
 		}
@@ -77,21 +80,27 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 		Log.e(TAG, "End:" + System.currentTimeMillis());
 		for (final City city : cities) {
 			DataManager.getInstance().getHourlyForecast(city, new HourlyForecastListener() {
-				
+
 				@Override
 				public void onSuccess(HourlyForecast hourlyForecast) {
-					city.setHourlyForecast(hourlyForecast);
-					getContentResolver().u
+					insertHourlyForecastsToDb(hourlyForecast, city.getId());
 				}
-				
+
 				@Override
 				public void onError(int code) {
-					// TODO Auto-generated method stub
-					
+					Log.e(TAG, "Getting hourly forecasts failed..");
 				}
 			});
 		}
 
+	}
+
+	private synchronized void insertHourlyForecastsToDb(HourlyForecast hourlyForecast, int cityId) {
+		getContentResolver().delete(HourlyForecastProvider.CONTENT_URI, HourlyForecastTable.COLUMN_CITY_ID + "=" + cityId, null);
+		for (Forecast forecast : hourlyForecast.getForecasts()) {
+			forecast.setCityId(cityId);
+			getContentResolver().insert(HourlyForecastProvider.CONTENT_URI, forecast.getContentValues());
+		}
 	}
 
 	@Override

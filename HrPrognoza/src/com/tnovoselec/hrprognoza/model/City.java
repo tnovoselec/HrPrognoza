@@ -6,7 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 public class City {
-	private long id;
+	private int id;
 	private String name;
 	private double lat;
 	private double lng;
@@ -15,11 +15,11 @@ public class City {
 	private HourlyForecast hourlyForecast;
 	private DailyForecast dailyForecast;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -70,11 +70,10 @@ public class City {
 	public void setDailyForecast(DailyForecast dailyForecast) {
 		this.dailyForecast = dailyForecast;
 	}
-	
-	public ContentValues getContentValues(){
+
+	public ContentValues getContentValues() {
 		ContentValues cv = new ContentValues();
 		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
-//		cv.put(CityTable.COLUMN_DAILY_FORECAST, getDailyForecast());
 		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
 		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
 		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
@@ -84,7 +83,7 @@ public class City {
 	public static City fromCursor(Cursor cursor) {
 		City city = new City();
 		city.setCountry(cursor.getString(cursor.getColumnIndex(CityTable.COLUMN_COUNTRY)));
-		city.setId(cursor.getLong(cursor.getColumnIndex(CityTable.COLUMN_ID)));
+		city.setId(cursor.getInt(cursor.getColumnIndex(CityTable.COLUMN_ID)));
 		city.setLat(cursor.getDouble(cursor.getColumnIndex(CityTable.COLUMN_LAT)));
 		city.setLng(cursor.getDouble(cursor.getColumnIndex(CityTable.COLUMN_LNG)));
 		city.setName(cursor.getString(cursor.getColumnIndex(CityTable.COLUMN_NAME)));

@@ -13,24 +13,20 @@ public class CityTable {
 	public static final String COLUMN_LAT = "lat";
 	public static final String COLUMN_LNG = "lng";
 	public static final String COLUMN_COUNTRY = "country";
-	public static final String COLUMN_HOURLY_FORECAST = "hourly_forecast";
-	public static final String COLUMN_DAILY_FORECAST = "daily_forecast";
 
 	  // Database creation SQL statement
-	  private static final String DATABASE_CREATE = "create table " 
+	  private static final String TABLE_CREATE = "create table " 
 	      + TABLE_CITIES
 	      + "(" 
-	      + COLUMN_ID + " integer primary key autoincrement, " 
+	      + COLUMN_ID + " integer primary key, " 
 	      + COLUMN_NAME + " text not null, " 
 	      + COLUMN_COUNTRY + " text not null," 
 	      + COLUMN_LAT + " real not null,"
-	      + COLUMN_LNG + " real not null,"
-	      + COLUMN_HOURLY_FORECAST+ " text ,"
-	      + COLUMN_DAILY_FORECAST + " text"
+	      + COLUMN_LNG + " real not null"
 	      + ");";
 
 	  public static void onCreate(SQLiteDatabase database) {
-	    database.execSQL(DATABASE_CREATE);
+	    database.execSQL(TABLE_CREATE);
 	  }
 
 	  public static void onUpgrade(SQLiteDatabase database, int oldVersion,

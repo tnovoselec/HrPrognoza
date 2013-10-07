@@ -1,16 +1,12 @@
 package com.tnovoselec.hrprognoza.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class HourlyForecast implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1103684303375905653L;
+public class HourlyForecast {
+
 	@SerializedName("list")
 	private ArrayList<Forecast> forecasts;
 
@@ -23,175 +19,169 @@ public class HourlyForecast implements Serializable {
 	}
 
 	public class Forecast {
+
+		private int cityId;
+
 		@SerializedName("dt")
-		private long dt;
+		private long timestamp;
 
-		@SerializedName("pressure")
-		private float pressure;
-
-		@SerializedName("humidity")
-		private float humidity;
-
-		@SerializedName("temp")
-		private Temp temp;
+		@SerializedName("main")
+		private Main main;
 
 		@SerializedName("weather")
-		private ArrayList<Weather> weather;
+		private List<Weather> weather;
 
-		@SerializedName("speed")
-		private float speed;
-
-		@SerializedName("deg")
-		private float deg;
+		@SerializedName("wind")
+		private Wind wind;
 
 		@SerializedName("clouds")
-		private float clouds;
+		private Clouds clouds;
 
-		public long getDt() {
-			return dt;
+		public int getCityId() {
+			return cityId;
 		}
 
-		public void setDt(long dt) {
-			this.dt = dt;
+		public void setCityId(int cityId) {
+			this.cityId = cityId;
 		}
 
-		public float getPressure() {
-			return pressure;
+		public long getTimestamp() {
+			return timestamp;
 		}
 
-		public void setPressure(float pressure) {
-			this.pressure = pressure;
+		public void setTimestamp(long timestamp) {
+			this.timestamp = timestamp;
 		}
 
-		public float getHumidity() {
-			return humidity;
+		public Main getMain() {
+			return main;
 		}
 
-		public void setHumidity(float humidity) {
-			this.humidity = humidity;
-		}
-
-		public Temp getTemp() {
-			return temp;
-		}
-
-		public void setTemp(Temp temp) {
-			this.temp = temp;
+		public void setMain(Main main) {
+			this.main = main;
 		}
 
 		public List<Weather> getWeather() {
 			return weather;
 		}
 
-		public void setWeather(ArrayList<Weather> weather) {
+		public Weather getFirstWeather() {
+			return this.weather != null ? this.weather.get(0) : null;
+		}
+
+		public void setWeather(List<Weather> weather) {
 			this.weather = weather;
 		}
 
-		public float getSpeed() {
-			return speed;
+		public Wind getWind() {
+			return wind;
 		}
 
-		public void setSpeed(float speed) {
-			this.speed = speed;
+		public void setWind(Wind wind) {
+			this.wind = wind;
 		}
 
-		public float getDeg() {
-			return deg;
-		}
-
-		public void setDeg(float deg) {
-			this.deg = deg;
-		}
-
-		public float getClouds() {
+		public Clouds getClouds() {
 			return clouds;
 		}
 
-		public void setClouds(float clouds) {
+		public void setClouds(Clouds clouds) {
 			this.clouds = clouds;
 		}
 
-		public class Temp implements Serializable {
+		public class Main {
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -4864520288192067500L;
+			@SerializedName("dt")
+			private float temp;
 
-			@SerializedName("max")
-			private float max;
+			@SerializedName("temp_min")
+			private float tempMin;
 
-			@SerializedName("min")
-			private float min;
+			@SerializedName("temp_max")
+			private float tempMax;
 
-			@SerializedName("day")
-			private float day;
+			@SerializedName("pressure")
+			private float pressure;
 
-			@SerializedName("eve")
-			private float eve;
+			@SerializedName("sea_level")
+			private float seaLevel;
 
-			@SerializedName("morn")
-			private float morn;
+			@SerializedName("grnd_level")
+			private float groundLevel;
 
-			@SerializedName("night")
-			private float night;
+			@SerializedName("humidity")
+			private float humidity;
 
-			public float getMax() {
-				return max;
+			@SerializedName("temp_kf")
+			private float tempKf;
+
+			public float getTemp() {
+				return temp;
 			}
 
-			public void setMax(float max) {
-				this.max = max;
+			public void setTemp(float temp) {
+				this.temp = temp;
 			}
 
-			public float getMin() {
-				return min;
+			public float getTempMin() {
+				return tempMin;
 			}
 
-			public void setMin(float min) {
-				this.min = min;
+			public void setTempMin(float tempMin) {
+				this.tempMin = tempMin;
 			}
 
-			public float getDay() {
-				return day;
+			public float getTempMax() {
+				return tempMax;
 			}
 
-			public void setDay(float day) {
-				this.day = day;
+			public void setTempMax(float tempMax) {
+				this.tempMax = tempMax;
 			}
 
-			public float getEve() {
-				return eve;
+			public float getPressure() {
+				return pressure;
 			}
 
-			public void setEve(float eve) {
-				this.eve = eve;
+			public void setPressure(float pressure) {
+				this.pressure = pressure;
 			}
 
-			public float getMorn() {
-				return morn;
+			public float getSeaLevel() {
+				return seaLevel;
 			}
 
-			public void setMorn(float morn) {
-				this.morn = morn;
+			public void setSeaLevel(float seaLevel) {
+				this.seaLevel = seaLevel;
 			}
 
-			public float getNight() {
-				return night;
+			public float getGroundLevel() {
+				return groundLevel;
 			}
 
-			public void setNight(float night) {
-				this.night = night;
+			public void setGroundLevel(float groundLevel) {
+				this.groundLevel = groundLevel;
+			}
+
+			public float getHumidity() {
+				return humidity;
+			}
+
+			public void setHumidity(float humidity) {
+				this.humidity = humidity;
+			}
+
+			public float getTempKf() {
+				return tempKf;
+			}
+
+			public void setTempKf(float tempKf) {
+				this.tempKf = tempKf;
 			}
 
 		}
 
-		public class Weather implements Serializable {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -3301791705552141816L;
+		public class Weather {
 
 			@SerializedName("id")
 			private int id;
@@ -237,5 +227,46 @@ public class HourlyForecast implements Serializable {
 				this.main = main;
 			}
 		}
+
+		public class Clouds {
+			@SerializedName("all")
+			private float all;
+
+			public float getAll() {
+				return all;
+			}
+
+			public void setAll(float all) {
+				this.all = all;
+			}
+
+		}
+
+		public class Wind {
+
+			@SerializedName("speed")
+			private float speed;
+
+			@SerializedName("deg")
+			private float deg;
+
+			public float getSpeed() {
+				return speed;
+			}
+
+			public void setSpeed(float speed) {
+				this.speed = speed;
+			}
+
+			public float getDeg() {
+				return deg;
+			}
+
+			public void setDeg(float deg) {
+				this.deg = deg;
+			}
+
+		}
 	}
+
 }
