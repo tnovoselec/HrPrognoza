@@ -7,10 +7,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.tnovoselec.hrprognoza.Config;
+import com.tnovoselec.hrprognoza.listeners.DailyForecastListener;
 import com.tnovoselec.hrprognoza.listeners.HourlyForecastListener;
 import com.tnovoselec.hrprognoza.model.City;
+import com.tnovoselec.hrprognoza.model.DailyForecast;
 import com.tnovoselec.hrprognoza.model.HourlyForecast;
 
 public class DataManager {
@@ -50,10 +53,51 @@ public class DataManager {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				Log.e(TAG, error.getMessage());
+				Log.e(TAG, ""+ error.getMessage());
 			}
 		});
 		reqQueue.add(req);
 
+	}
+	
+	public void getDailyForecast(City city, final DailyForecastListener dailyForecastListener){
+		String url = String.format(Config.DAILY_FORECAST_URL, city.getId());
+
+		GsonRequest<DailyForecast> req = new GsonRequest<DailyForecast>(url, DailyForecast.class, null, new Listener<DailyForecast>() {
+
+			@Override
+			public void onResponse(DailyForecast response) {
+				if (dailyForecastListener != null) {
+					dailyForecastListener.onSuccess(response);
+				}
+
+			}
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(TAG, error.getMessage());
+			}
+		});
+		reqQueue.add(req);
+	}
+	
+	public void getTestData(){
+		String url ="http://192.168.1.94/restapi.php?action=get_app_list";
+		StringRequest req = new StringRequest(url, new Listener<String>() {
+
+			@Override
+			public void onResponse(String response) {
+				Log.e("kita", response);
+				
+			}
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e("kita", error.getLocalizedMessage());
+			}
+		});
+		reqQueue.add(req);
 	}
 }

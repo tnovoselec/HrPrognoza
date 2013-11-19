@@ -12,12 +12,12 @@ public class HourlyForecastTable {
 	public static final String COLUMN_TIMESTAMP = "timestamp";
 	public static final String COLUMN_PRESSURE = "pressure";
 	public static final String COLUMN_HUMIDITY = "humidity";
-	public static final String COLUMN_TEMP_DAY = "temp_day";
+	public static final String COLUMN_TEMP = "temp";
 	public static final String COLUMN_TEMP_MAX = "temp_max";
 	public static final String COLUMN_TEMP_MIN = "temp_min";
-	public static final String COLUMN_TEMP_MORNING = "temp_morning";
-	public static final String COLUMN_TEMP_NIGHT = "temp_night";
-	public static final String COLUMN_TEMP_EVE = "temp_eve";
+	public static final String COLUMN_TEMP_KF = "temp_kf";
+	public static final String COLUMN_SEA_LEVEL = "sea_level";
+	public static final String COLUMN_GROUND_LEVEL = "grnd_level";
 	public static final String COLUMN_WEATHER_ID = "weather_id";
 	public static final String COLUMN_WEATHER_MAIN= "weather_main";
 	public static final String COLUMN_WEATHER_DESCRIPTION = "weather_description";
@@ -36,12 +36,12 @@ public class HourlyForecastTable {
 	      + COLUMN_TIMESTAMP + " integer not null," 
 	      + COLUMN_PRESSURE + " real,"
 	      + COLUMN_HUMIDITY + " real ,"
-	      + COLUMN_TEMP_DAY+ " real ,"
+	      + COLUMN_TEMP+ " real ,"
 	      + COLUMN_TEMP_MAX + " real,"
 	      + COLUMN_TEMP_MIN + " real,"
-	      + COLUMN_TEMP_MORNING + " real,"
-	      + COLUMN_TEMP_NIGHT + " real,"
-	      + COLUMN_TEMP_EVE + " real,"
+	      + COLUMN_TEMP_KF + " real,"
+	      + COLUMN_SEA_LEVEL + " real,"
+	      + COLUMN_GROUND_LEVEL + " real,"
 	      + COLUMN_WEATHER_ID + " integer not null," 
 	      + COLUMN_WEATHER_MAIN + " text,"
 	      + COLUMN_WEATHER_DESCRIPTION + " text,"

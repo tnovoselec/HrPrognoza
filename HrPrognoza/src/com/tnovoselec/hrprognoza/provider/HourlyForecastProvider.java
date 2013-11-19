@@ -16,8 +16,8 @@ import android.text.TextUtils;
 import com.tnovoselec.hrprognoza.db.DatabaseHelper;
 import com.tnovoselec.hrprognoza.db.HourlyForecastTable;
 
-public class HourlyForecastProvider extends ContentProvider{
-	
+public class HourlyForecastProvider extends ContentProvider {
+
 	static final String TAG = "HourlyForecastProvider";
 
 	private DatabaseHelper database;
@@ -40,7 +40,6 @@ public class HourlyForecastProvider extends ContentProvider{
 		sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", HOURLY_FORECAST_ID);
 	}
 
-
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int uriType = sURIMatcher.match(uri);
@@ -55,7 +54,8 @@ public class HourlyForecastProvider extends ContentProvider{
 			if (TextUtils.isEmpty(selection)) {
 				rowsDeleted = sqlDB.delete(HourlyForecastTable.TABLE_HOURLY_FORECASTS, HourlyForecastTable.COLUMN_ID + "=" + id, null);
 			} else {
-				rowsDeleted = sqlDB.delete(HourlyForecastTable.TABLE_HOURLY_FORECASTS, HourlyForecastTable.COLUMN_ID + "=" + id + " and " + selection, selectionArgs);
+				rowsDeleted = sqlDB.delete(HourlyForecastTable.TABLE_HOURLY_FORECASTS, HourlyForecastTable.COLUMN_ID + "=" + id + " and " + selection,
+						selectionArgs);
 			}
 			break;
 		default:
@@ -85,7 +85,6 @@ public class HourlyForecastProvider extends ContentProvider{
 		getContext().getContentResolver().notifyChange(uri, null);
 		return Uri.parse(BASE_PATH + "/" + id);
 	}
-
 
 	@Override
 	public boolean onCreate() {
@@ -139,7 +138,8 @@ public class HourlyForecastProvider extends ContentProvider{
 			if (TextUtils.isEmpty(selection)) {
 				rowsUpdated = sqlDB.update(HourlyForecastTable.TABLE_HOURLY_FORECASTS, values, HourlyForecastTable.COLUMN_ID + "=" + id, null);
 			} else {
-				rowsUpdated = sqlDB.update(HourlyForecastTable.TABLE_HOURLY_FORECASTS, values, HourlyForecastTable.COLUMN_ID + "=" + id + " and " + selection, selectionArgs);
+				rowsUpdated = sqlDB.update(HourlyForecastTable.TABLE_HOURLY_FORECASTS, values, HourlyForecastTable.COLUMN_ID + "=" + id + " and " + selection,
+						selectionArgs);
 			}
 			break;
 		default:
@@ -150,7 +150,12 @@ public class HourlyForecastProvider extends ContentProvider{
 	}
 
 	private void checkColumns(String[] projection) {
-		String[] available = { HourlyForecastTable.COLUMN_CITY_ID,HourlyForecastTable.COLUMN_CLOUDS ,HourlyForecastTable.COLUMN_DEG ,HourlyForecastTable.COLUMN_HUMIDITY ,HourlyForecastTable.COLUMN_ID ,HourlyForecastTable.COLUMN_PRESSURE ,HourlyForecastTable.COLUMN_RAIN ,HourlyForecastTable.COLUMN_SPEED ,HourlyForecastTable.COLUMN_TEMP_DAY ,HourlyForecastTable.COLUMN_TEMP_EVE ,HourlyForecastTable.COLUMN_TEMP_MAX ,HourlyForecastTable.COLUMN_TEMP_MIN,HourlyForecastTable.COLUMN_TEMP_MORNING,HourlyForecastTable.COLUMN_TEMP_NIGHT,HourlyForecastTable.COLUMN_TIMESTAMP,HourlyForecastTable.COLUMN_WEATHER_DESCRIPTION,HourlyForecastTable.COLUMN_WEATHER_ICON,HourlyForecastTable.COLUMN_WEATHER_ID,HourlyForecastTable.COLUMN_WEATHER_MAIN  };
+		String[] available = { HourlyForecastTable.COLUMN_CITY_ID, HourlyForecastTable.COLUMN_CLOUDS, HourlyForecastTable.COLUMN_DEG,
+				HourlyForecastTable.COLUMN_HUMIDITY, HourlyForecastTable.COLUMN_ID, HourlyForecastTable.COLUMN_PRESSURE, HourlyForecastTable.COLUMN_RAIN,
+				HourlyForecastTable.COLUMN_SPEED, HourlyForecastTable.COLUMN_TEMP, HourlyForecastTable.COLUMN_GROUND_LEVEL,
+				HourlyForecastTable.COLUMN_TEMP_MAX, HourlyForecastTable.COLUMN_TEMP_MIN, HourlyForecastTable.COLUMN_SEA_LEVEL,
+				HourlyForecastTable.COLUMN_TEMP_KF, HourlyForecastTable.COLUMN_TIMESTAMP, HourlyForecastTable.COLUMN_WEATHER_DESCRIPTION,
+				HourlyForecastTable.COLUMN_WEATHER_ICON, HourlyForecastTable.COLUMN_WEATHER_ID, HourlyForecastTable.COLUMN_WEATHER_MAIN };
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));

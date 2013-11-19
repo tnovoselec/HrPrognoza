@@ -148,7 +148,8 @@ public class CityProvider extends ContentProvider {
 	}
 
 	private void checkColumns(String[] projection) {
-		String[] available = { CityTable.COLUMN_NAME, CityTable.COLUMN_LAT, CityTable.COLUMN_LNG, CityTable.COLUMN_COUNTRY, CityTable.COLUMN_ID };
+		String[] available = { CityTable.COLUMN_NAME, CityTable.COLUMN_LAT, CityTable.COLUMN_LNG, CityTable.COLUMN_COUNTRY, CityTable.COLUMN_ID,
+				CityTable.COLUMN_SELECTED, CityTable.COLUMN_TIMESTAMP };
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));

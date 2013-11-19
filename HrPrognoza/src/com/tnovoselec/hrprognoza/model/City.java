@@ -6,11 +6,16 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 public class City {
+
+	public static final int SELECTED = 1;
+
 	private int id;
 	private String name;
 	private double lat;
 	private double lng;
 	private String country;
+	private int selected;
+	private int timestamp;
 
 	private HourlyForecast hourlyForecast;
 	private DailyForecast dailyForecast;
@@ -71,12 +76,34 @@ public class City {
 		this.dailyForecast = dailyForecast;
 	}
 
+	public int getSelected() {
+		return selected;
+	}
+
+	public void setSelected(int selected) {
+		this.selected = selected;
+	}
+
+	public boolean isSelected() {
+		return this.selected == SELECTED;
+	}
+
+	public int getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(int timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public ContentValues getContentValues() {
 		ContentValues cv = new ContentValues();
 		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
-		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
-		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
-		cv.put(CityTable.COLUMN_COUNTRY, getCountry());
+		cv.put(CityTable.COLUMN_ID, getId());
+		cv.put(CityTable.COLUMN_LAT, getLat());
+		cv.put(CityTable.COLUMN_LNG, getLng());
+		cv.put(CityTable.COLUMN_NAME, getName());
+		cv.put(CityTable.COLUMN_TIMESTAMP, getTimestamp());
 		return cv;
 	}
 
@@ -87,6 +114,8 @@ public class City {
 		city.setLat(cursor.getDouble(cursor.getColumnIndex(CityTable.COLUMN_LAT)));
 		city.setLng(cursor.getDouble(cursor.getColumnIndex(CityTable.COLUMN_LNG)));
 		city.setName(cursor.getString(cursor.getColumnIndex(CityTable.COLUMN_NAME)));
+		city.setSelected(cursor.getInt(cursor.getColumnIndex(CityTable.COLUMN_SELECTED)));
+		city.setTimestamp(cursor.getInt(cursor.getColumnIndex(CityTable.COLUMN_TIMESTAMP)));
 		return city;
 	}
 

@@ -3,7 +3,10 @@ package com.tnovoselec.hrprognoza.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ContentValues;
+
 import com.google.gson.annotations.SerializedName;
+import com.tnovoselec.hrprognoza.db.HourlyForecastTable;
 
 public class HourlyForecast {
 
@@ -87,6 +90,30 @@ public class HourlyForecast {
 
 		public void setClouds(Clouds clouds) {
 			this.clouds = clouds;
+		}
+
+		public ContentValues getContentValues() {
+			ContentValues cv = new ContentValues();
+			cv.put(HourlyForecastTable.COLUMN_CITY_ID, this.getCityId());
+			cv.put(HourlyForecastTable.COLUMN_CLOUDS, this.getClouds().getAll());
+			cv.put(HourlyForecastTable.COLUMN_DEG, this.getWind().getDeg());
+			cv.put(HourlyForecastTable.COLUMN_HUMIDITY, this.getMain().getHumidity());
+			// cv.put(HourlyForecastTable.COLUMN_ID, this.getCityId());
+			cv.put(HourlyForecastTable.COLUMN_PRESSURE, this.getMain().getPressure());
+			// cv.put(HourlyForecastTable.COLUMN_RAIN, this.getRain());
+			cv.put(HourlyForecastTable.COLUMN_SPEED, this.getWind().getSpeed());
+			cv.put(HourlyForecastTable.COLUMN_TEMP, this.getMain().getTemp());
+			cv.put(HourlyForecastTable.COLUMN_SEA_LEVEL, this.getMain().getSeaLevel());
+			cv.put(HourlyForecastTable.COLUMN_TEMP_MAX, this.getMain().getTempMax());
+			cv.put(HourlyForecastTable.COLUMN_TEMP_MIN, this.getMain().getTempMin());
+			cv.put(HourlyForecastTable.COLUMN_GROUND_LEVEL, this.getMain().getGroundLevel());
+			cv.put(HourlyForecastTable.COLUMN_TEMP_KF, this.getMain().getTempKf());
+			cv.put(HourlyForecastTable.COLUMN_TIMESTAMP, this.getTimestamp());
+			cv.put(HourlyForecastTable.COLUMN_WEATHER_DESCRIPTION, this.getFirstWeather().getDescription());
+			cv.put(HourlyForecastTable.COLUMN_WEATHER_ICON, this.getFirstWeather().getIcon());
+			cv.put(HourlyForecastTable.COLUMN_WEATHER_ID, this.getFirstWeather().getId());
+			cv.put(HourlyForecastTable.COLUMN_WEATHER_MAIN, this.getFirstWeather().getMain());
+			return cv;
 		}
 
 		public class Main {

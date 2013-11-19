@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	  private static final String DATABASE_NAME = "hr_prognoza.db";
-	  private static final int DATABASE_VERSION = 6;
+	  private static final int DATABASE_VERSION = 8;
 
 
 	public DatabaseHelper(Context context) {

@@ -6,7 +6,7 @@ import java.util.List;
 import android.content.ContentValues;
 
 import com.google.gson.annotations.SerializedName;
-import com.tnovoselec.hrprognoza.db.HourlyForecastTable;
+import com.tnovoselec.hrprognoza.db.DailyForecastTable;
 
 public class DailyForecast {
 
@@ -100,7 +100,7 @@ public class DailyForecast {
 			this.weather = weather;
 		}
 
-		public Weather getFirstWether() {
+		public Weather getFirstWeather() {
 			return this.weather != null ? this.weather.get(0) : null;
 		}
 
@@ -255,25 +255,25 @@ public class DailyForecast {
 
 		public ContentValues getContentValues() {
 			ContentValues cv = new ContentValues();
-			cv.put(HourlyForecastTable.COLUMN_CITY_ID, this.getCityId());
-			cv.put(HourlyForecastTable.COLUMN_CLOUDS, this.getClouds());
-			cv.put(HourlyForecastTable.COLUMN_DEG, this.getDeg());
-			cv.put(HourlyForecastTable.COLUMN_HUMIDITY, this.getHumidity());
-			// cv.put(HourlyForecastTable.COLUMN_ID, this.getCityId());
-			cv.put(HourlyForecastTable.COLUMN_PRESSURE, this.getPressure());
-			cv.put(HourlyForecastTable.COLUMN_RAIN, this.getRain());
-			cv.put(HourlyForecastTable.COLUMN_SPEED, this.getSpeed());
-			cv.put(HourlyForecastTable.COLUMN_TEMP_DAY, this.getTemp().getDay());
-			cv.put(HourlyForecastTable.COLUMN_TEMP_EVE, this.getTemp().getEve());
-			cv.put(HourlyForecastTable.COLUMN_TEMP_MAX, this.getTemp().getMax());
-			cv.put(HourlyForecastTable.COLUMN_TEMP_MIN, this.getTemp().getMin());
-			cv.put(HourlyForecastTable.COLUMN_TEMP_MORNING, this.getTemp().getMorn());
-			cv.put(HourlyForecastTable.COLUMN_TEMP_NIGHT, this.getTemp().getNight());
-			cv.put(HourlyForecastTable.COLUMN_TIMESTAMP, this.getTimestamp());
-			cv.put(HourlyForecastTable.COLUMN_WEATHER_DESCRIPTION, this.getFirstWether().getDescription());
-			cv.put(HourlyForecastTable.COLUMN_WEATHER_ICON, this.getFirstWether().getIcon());
-			cv.put(HourlyForecastTable.COLUMN_WEATHER_ID, this.getFirstWether().getId());
-			cv.put(HourlyForecastTable.COLUMN_WEATHER_MAIN, this.getFirstWether().getMain());
+			cv.put(DailyForecastTable.COLUMN_CITY_ID, this.getCityId());
+			cv.put(DailyForecastTable.COLUMN_CLOUDS, this.getClouds());
+			cv.put(DailyForecastTable.COLUMN_DEG, this.getDeg());
+			cv.put(DailyForecastTable.COLUMN_HUMIDITY, this.getHumidity());
+			// cv.put(DailyForecastTable.COLUMN_ID, this.getCityId());
+			cv.put(DailyForecastTable.COLUMN_PRESSURE, this.getPressure());
+			cv.put(DailyForecastTable.COLUMN_RAIN, this.getRain());
+			cv.put(DailyForecastTable.COLUMN_SPEED, this.getSpeed());
+			cv.put(DailyForecastTable.COLUMN_TEMP_DAY, this.getTemp().getDay());
+			cv.put(DailyForecastTable.COLUMN_TEMP_EVE, this.getTemp().getEve());
+			cv.put(DailyForecastTable.COLUMN_TEMP_MAX, this.getTemp().getMax());
+			cv.put(DailyForecastTable.COLUMN_TEMP_MIN, this.getTemp().getMin());
+			cv.put(DailyForecastTable.COLUMN_TEMP_MORNING, this.getTemp().getMorn());
+			cv.put(DailyForecastTable.COLUMN_TEMP_NIGHT, this.getTemp().getNight());
+			cv.put(DailyForecastTable.COLUMN_TIMESTAMP, this.getTimestamp());
+			cv.put(DailyForecastTable.COLUMN_WEATHER_DESCRIPTION, this.getFirstWeather().getDescription());
+			cv.put(DailyForecastTable.COLUMN_WEATHER_ICON, this.getFirstWeather().getIcon());
+			cv.put(DailyForecastTable.COLUMN_WEATHER_ID, this.getFirstWeather().getId());
+			cv.put(DailyForecastTable.COLUMN_WEATHER_MAIN, this.getFirstWeather().getMain());
 			return cv;
 		}
 	}
