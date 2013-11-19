@@ -76,7 +76,7 @@ public class DataManager {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				Log.e(TAG, error.getMessage());
+				Log.e(TAG, new String(error.networkResponse.data));
 			}
 		});
 		reqQueue.add(req);
@@ -88,14 +88,14 @@ public class DataManager {
 
 			@Override
 			public void onResponse(String response) {
-				Log.e("kita", response);
+				Log.e("kita", "");
 				
 			}
 		}, new ErrorListener() {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				Log.e("kita", error.getLocalizedMessage());
+				Log.e("kita", "" + error.getLocalizedMessage());
 			}
 		});
 		reqQueue.add(req);

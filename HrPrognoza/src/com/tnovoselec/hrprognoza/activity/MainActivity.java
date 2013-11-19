@@ -1,7 +1,9 @@
 package com.tnovoselec.hrprognoza.activity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.LoaderManager;
@@ -11,8 +13,10 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 
 import com.tnovoselec.hrprognoza.R;
+import com.tnovoselec.hrprognoza.adapter.CitiesAdapter;
 import com.tnovoselec.hrprognoza.async.DbInitializerTask;
 import com.tnovoselec.hrprognoza.async.DbInitializerTask.DbInitializerListener;
 import com.tnovoselec.hrprognoza.data.DataManager;
@@ -35,12 +39,19 @@ import com.tnovoselec.hrprognoza.utils.Util;
 public class MainActivity extends Activity implements DbInitializerListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 	private static String TAG = MainActivity.class.getSimpleName();
-	private List<City> cities;
+	private List<City> cities = new ArrayList<City>();
+    List<DailyForecast> dailyForecasts = new ArrayList<DailyForecast>();
+    private ListView list;
+    private CitiesAdapter adapter;
+    private Set<Integer> citiesIds = new HashSet<Integer>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+        list = (ListView)findViewById(R.id.list);
+        adapter = new CitiesAdapter(this, cities);
 		if (!Util.isCityDbInitialized(this)) {
 			new DbInitializerTask(this, this, new DatabaseHelper(this).getWritableDatabase()).execute(new Void[0]);
 		} else {
@@ -52,9 +63,9 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 	public void onCompleted() {
 		Log.i(TAG, "Db successfully initialized!");
 		Util.setDbInitialized(this, true);
-//		getLoaderManager().initLoader(0, null, this);
-		Intent i = new Intent(this, UpdateService.class);
-		startService(i);
+		getLoaderManager().initLoader(0, null, this);
+		//Intent i = new Intent(this, UpdateService.class);
+		//startService(i);
 	}
 
 	@Override
@@ -72,15 +83,19 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		cities = new ArrayList<City>();
+
 		while (cursor.moveToNext()) {
 			cities.add(City.fromCursor(cursor));
 		}
 		for (final City city : cities) {
-			getDailyForecastForCity(city);
-			getHourlyForecastForCity(city);
+            citiesIds.add(city.getId());
 
 		}
+        for (final City city : cities) {
+            getDailyForecastForCity(city);
+            //getHourlyForecastForCity(city);
+
+        }
 
 	}
 
@@ -90,7 +105,8 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 			@Override
 			public void onSuccess(DailyForecast dailyForecast) {
 				insertDailyForecastsToDb(dailyForecast, city.getId());
-
+                city.setDailyForecast(dailyForecast);
+                removeFromSet(city.getId());
 			}
 
 			@Override
@@ -106,6 +122,7 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 			@Override
 			public void onSuccess(HourlyForecast hourlyForecast) {
 				insertHourlyForecastsToDb(hourlyForecast, city.getId());
+                city.setHourlyForecast(hourlyForecast);
 			}
 
 			@Override
@@ -135,5 +152,14 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 	public void onLoaderReset(Loader<Cursor> arg0) {
 
 	}
+
+    private void removeFromSet(Integer id){
+        if (citiesIds.contains(id)){
+            citiesIds.remove(id);
+            if (citiesIds.isEmpty()){
+                list.setAdapter(adapter);
+            }
+        }
+    }
 
 }
