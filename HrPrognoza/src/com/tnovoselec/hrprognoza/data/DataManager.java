@@ -53,14 +53,14 @@ public class DataManager {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				Log.e(TAG, ""+ error.getMessage());
+				Log.e(TAG, "" + error.getMessage());
 			}
 		});
 		reqQueue.add(req);
 
 	}
-	
-	public void getDailyForecast(City city, final DailyForecastListener dailyForecastListener){
+
+	public void getDailyForecast(City city, final DailyForecastListener dailyForecastListener) {
 		String url = String.format(Config.DAILY_FORECAST_URL, city.getId());
 
 		GsonRequest<DailyForecast> req = new GsonRequest<DailyForecast>(url, DailyForecast.class, null, new Listener<DailyForecast>() {
@@ -76,28 +76,12 @@ public class DataManager {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				Log.e(TAG, new String(error.networkResponse.data));
+				if (error.networkResponse != null) {
+					Log.e(TAG, new String(error.networkResponse.data));
+				}
 			}
 		});
 		reqQueue.add(req);
 	}
-	
-	public void getTestData(){
-		String url ="http://192.168.1.94/restapi.php?action=get_app_list";
-		StringRequest req = new StringRequest(url, new Listener<String>() {
 
-			@Override
-			public void onResponse(String response) {
-				Log.e("kita", "");
-				
-			}
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				Log.e("kita", "" + error.getLocalizedMessage());
-			}
-		});
-		reqQueue.add(req);
-	}
 }

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -40,18 +41,20 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 
 	private static String TAG = MainActivity.class.getSimpleName();
 	private List<City> cities = new ArrayList<City>();
-    List<DailyForecast> dailyForecasts = new ArrayList<DailyForecast>();
-    private ListView list;
-    private CitiesAdapter adapter;
-    private Set<Integer> citiesIds = new HashSet<Integer>();
+	List<DailyForecast> dailyForecasts = new ArrayList<DailyForecast>();
+	private ListView list;
+	private CitiesAdapter adapter;
+	private Set<Integer> citiesIds = new HashSet<Integer>();
+
+	private int activeLoader = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        list = (ListView)findViewById(R.id.list);
-        adapter = new CitiesAdapter(this, cities);
+		list = (ListView) findViewById(R.id.list);
+		adapter = new CitiesAdapter(this, cities);
 		if (!Util.isCityDbInitialized(this)) {
 			new DbInitializerTask(this, this, new DatabaseHelper(this).getWritableDatabase()).execute(new Void[0]);
 		} else {
@@ -63,9 +66,11 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 	public void onCompleted() {
 		Log.i(TAG, "Db successfully initialized!");
 		Util.setDbInitialized(this, true);
+		activeLoader = 0;
 		getLoaderManager().initLoader(0, null, this);
-		//Intent i = new Intent(this, UpdateService.class);
-		//startService(i);
+
+		// Intent i = new Intent(this, UpdateService.class);
+		// startService(i);
 	}
 
 	@Override
@@ -76,26 +81,75 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String[] projection = { CityTable.COLUMN_NAME, CityTable.COLUMN_LAT, CityTable.COLUMN_LNG, CityTable.COLUMN_COUNTRY, CityTable.COLUMN_ID, CityTable.COLUMN_SELECTED, CityTable.COLUMN_TIMESTAMP};
-		CursorLoader cursorLoader = new CursorLoader(this, CityProvider.CONTENT_URI, projection, null, null, null);
+		CursorLoader cursorLoader = null;
+
+		if (id == 0) {
+			String[] projection = { CityTable.COLUMN_NAME, CityTable.COLUMN_LAT, CityTable.COLUMN_LNG, CityTable.COLUMN_COUNTRY, CityTable.COLUMN_ID,
+					CityTable.COLUMN_SELECTED, CityTable.COLUMN_TIMESTAMP };
+			cursorLoader = new CursorLoader(this, CityProvider.CONTENT_URI, projection, null, null, null);
+
+		} else if (id == 1) {
+			String[] projection = { DailyForecastTable.COLUMN_CITY_ID, DailyForecastTable.COLUMN_CLOUDS, DailyForecastTable.COLUMN_DEG,
+					DailyForecastTable.COLUMN_HUMIDITY, DailyForecastTable.COLUMN_ID, DailyForecastTable.COLUMN_PRESSURE, DailyForecastTable.COLUMN_RAIN,
+					DailyForecastTable.COLUMN_SPEED, DailyForecastTable.COLUMN_TEMP_DAY, DailyForecastTable.COLUMN_TEMP_EVE,
+					DailyForecastTable.COLUMN_TEMP_MAX, DailyForecastTable.COLUMN_TEMP_MIN, DailyForecastTable.COLUMN_TEMP_MORNING,
+					DailyForecastTable.COLUMN_TEMP_NIGHT, DailyForecastTable.COLUMN_TIMESTAMP, DailyForecastTable.COLUMN_WEATHER_DESCRIPTION,
+					DailyForecastTable.COLUMN_WEATHER_ICON, DailyForecastTable.COLUMN_WEATHER_ID, DailyForecastTable.COLUMN_WEATHER_MAIN };
+			cursorLoader = new CursorLoader(this, DailyForecastProvider.CONTENT_URI, projection, null, null, null);
+
+		}
 		return cursorLoader;
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-		while (cursor.moveToNext()) {
-			cities.add(City.fromCursor(cursor));
-		}
-		for (final City city : cities) {
-            citiesIds.add(city.getId());
+		if (activeLoader == 0) {
+			while (cursor.moveToNext()) {
+				cities.add(City.fromCursor(cursor));
+			}
+			for (final City city : cities) {
+				citiesIds.add(city.getId());
 
-		}
-        for (final City city : cities) {
-            getDailyForecastForCity(city);
-            //getHourlyForecastForCity(city);
+			}
 
-        }
+			if (PreferenceManager.getDefaultSharedPreferences(this).getLong("last_update", -1) + 5 * 2 * 60 * 1000 < System.currentTimeMillis()) {
+				for (final City city : cities) {
+					getDailyForecastForCity(city);
+					// getHourlyForecastForCity(city);
+
+				}
+			} else {
+				activeLoader = 1;
+				getLoaderManager().initLoader(1, null, this);
+			}
+		} else if (activeLoader == 1) {
+			while (cursor.moveToNext()) {
+				com.tnovoselec.hrprognoza.model.DailyForecast.Forecast forecast = DailyForecast.fromCursor(cursor);
+				boolean found = false;
+				for (DailyForecast df : dailyForecasts) {
+
+					if (df.getForecasts() != null && df.getForecasts().size() > 0 && df.getForecasts().get(0).getCityId() == forecast.getCityId()) {
+						df.getForecasts().add(forecast);
+						found = true;
+					}
+				}
+				if (!found) {
+					DailyForecast dff = new DailyForecast();
+					dff.setForecasts(new ArrayList<DailyForecast.Forecast>());
+					dff.getForecasts().add(forecast);
+					boolean cityFound = false;
+					for (City city : cities){
+						if (city.getId() == forecast.getCityId()){
+							city.setDailyForecast(dff);
+							
+						}
+					}
+				}
+
+			}
+			list.setAdapter(adapter);
+		}
 
 	}
 
@@ -105,8 +159,8 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 			@Override
 			public void onSuccess(DailyForecast dailyForecast) {
 				insertDailyForecastsToDb(dailyForecast, city.getId());
-                city.setDailyForecast(dailyForecast);
-                removeFromSet(city.getId());
+				city.setDailyForecast(dailyForecast);
+				removeFromSet(city.getId());
 			}
 
 			@Override
@@ -122,7 +176,7 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 			@Override
 			public void onSuccess(HourlyForecast hourlyForecast) {
 				insertHourlyForecastsToDb(hourlyForecast, city.getId());
-                city.setHourlyForecast(hourlyForecast);
+				city.setHourlyForecast(hourlyForecast);
 			}
 
 			@Override
@@ -153,13 +207,14 @@ public class MainActivity extends Activity implements DbInitializerListener, Loa
 
 	}
 
-    private void removeFromSet(Integer id){
-        if (citiesIds.contains(id)){
-            citiesIds.remove(id);
-            if (citiesIds.isEmpty()){
-                list.setAdapter(adapter);
-            }
-        }
-    }
+	private void removeFromSet(Integer id) {
+		if (citiesIds.contains(id)) {
+			citiesIds.remove(id);
+			if (citiesIds.isEmpty()) {
+				PreferenceManager.getDefaultSharedPreferences(this).edit().putLong("last_update", System.currentTimeMillis()).commit();
+				list.setAdapter(adapter);
+			}
+		}
+	}
 
 }

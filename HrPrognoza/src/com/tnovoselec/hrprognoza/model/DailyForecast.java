@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.google.gson.annotations.SerializedName;
 import com.tnovoselec.hrprognoza.db.DailyForecastTable;
-
+import com.tnovoselec.hrprognoza.model.DailyForecast.Forecast.Temp;
+import com.tnovoselec.hrprognoza.model.DailyForecast.Forecast.Weather;
 public class DailyForecast {
 
 	@SerializedName("list")
@@ -276,6 +278,37 @@ public class DailyForecast {
 			cv.put(DailyForecastTable.COLUMN_WEATHER_MAIN, this.getFirstWeather().getMain());
 			return cv;
 		}
+		
+	
 	}
-
+	public static Forecast fromCursor(Cursor cursor){
+		Forecast forecast = new DailyForecast().new Forecast();
+		forecast.setCityId(cursor.getInt(cursor.getColumnIndex(DailyForecastTable.COLUMN_CITY_ID)));
+		forecast.setClouds(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_CLOUDS)));
+		forecast.setDeg(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_DEG)));
+		forecast.setHumidity(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_HUMIDITY)));
+		forecast.setPressure(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_PRESSURE)));
+		forecast.setRain(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_RAIN)));
+		forecast.setSpeed(cursor.getInt(cursor.getColumnIndex(DailyForecastTable.COLUMN_SPEED)));
+		Temp temp = forecast.new Temp();
+		
+		temp.setDay(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_TEMP_DAY)));
+		temp.setEve(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_TEMP_EVE)));
+		temp.setMax(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_TEMP_MAX)));
+		temp.setMin(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_TEMP_MIN)));
+		temp.setMorn(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_TEMP_MORNING)));
+		temp.setNight(cursor.getFloat(cursor.getColumnIndex(DailyForecastTable.COLUMN_TEMP_NIGHT)));
+		forecast.setTemp(temp);
+		
+		forecast.setTimestamp(cursor.getLong(cursor.getColumnIndex(DailyForecastTable.COLUMN_TIMESTAMP)));
+		Weather weather = forecast.new Weather();
+		weather.setDescription(cursor.getString(cursor.getColumnIndex(DailyForecastTable.COLUMN_WEATHER_DESCRIPTION)));
+		weather.setIcon(cursor.getString(cursor.getColumnIndex(DailyForecastTable.COLUMN_WEATHER_ICON)));
+		weather.setId(cursor.getInt(cursor.getColumnIndex(DailyForecastTable.COLUMN_WEATHER_ID)));
+		weather.setMain(cursor.getString(cursor.getColumnIndex(DailyForecastTable.COLUMN_WEATHER_MAIN)));
+		ArrayList<Weather> weathers = new ArrayList<DailyForecast.Forecast.Weather>();
+		weathers.add(weather);
+		forecast.setWeather(weathers);
+		return forecast;
+	}
 }
