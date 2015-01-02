@@ -1,18 +1,18 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -21,7 +21,7 @@ android {
 dependencies {
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile 'com.jakewharton:disklrucache:2.0.2'
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.code.gson:gson:2.3'
     compile 'com.google.android:support-v4:r7'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
